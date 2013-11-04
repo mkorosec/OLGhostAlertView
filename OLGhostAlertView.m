@@ -100,7 +100,7 @@
         else
             _bottomMargin = 50;
         
-        _dismissTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
+        _dismissTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didChangeOrientation:)
@@ -132,6 +132,19 @@
     return self;
 }
 
+- (id)initWithTitle:(NSString *)title message:(NSString *)message timeout:(NSTimeInterval)timeout dismissible:(BOOL)dismissible delegate:(id<OLGhostAlertViewDelegate>)delegate
+{
+    self = [self initWithFrame:CGRectZero];
+    if (self) {
+        self.title = title;
+        self.message = message;
+        self.timeout = timeout;
+        self.dismissible = dismissible;
+        self.delegate = delegate;
+    }
+    return self;
+}
+
 - (id)initWithTitle:(NSString *)title message:(NSString *)message
 {
     self = [self initWithTitle:title message:message timeout:6 dismissible:YES];
@@ -154,7 +167,7 @@
     if (self.isVisible) return;
     
     UIViewController *parentController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
-
+    
     while (parentController.presentedViewController)
         parentController = parentController.presentedViewController;
     
@@ -191,6 +204,14 @@
         
         if (self.completionBlock) self.completionBlock();
     }];
+}
+
+- (void)dismiss
+{
+    [self hide];
+    if (self.delegate) {
+        [self.delegate dismissed: self.title];
+    }
 }
 
 #pragma mark - View layout
@@ -265,7 +286,7 @@
     
     self.titleLabel.frame = CGRectMake(self.titleLabel.frame.origin.x, ceilf(self.titleLabel.frame.origin.y), ceilf(totalLabelWidth), ceilf(titleSize.height));
     
-    if (self.messageLabel) 
+    if (self.messageLabel)
         self.messageLabel.frame = CGRectMake(self.messageLabel.frame.origin.x, ceilf(titleSize.height) + floorf(VERTICAL_PADDING * 1.5), ceilf(totalLabelWidth), ceilf(messageSize.height));
 }
 

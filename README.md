@@ -32,7 +32,7 @@ OLGhostAlertView has to be `show`n in or after `viewDidAppear:` is invoked on th
 
 Exposes all of the available options. 
 
-    - (id)initWithTitle:(NSString *)title message:(NSString *)message timeout:(NSTimeInterval)timeout dismissible:(BOOL)dismissible;
+    - (id)initWithTitle:(NSString *)title message:(NSString *)message timeout:(NSTimeInterval)timeout dismissible:(BOOL)dismissible delegate:(id<OLGhostAlertViewDelegate>)delegate;
 
 ##### Parameters
 _title_  
@@ -46,6 +46,9 @@ _timeout_
 
 _dismissible_  
 &nbsp;&nbsp;&nbsp;&nbsp;Whether the alert can be dismissed with a tap or not. 
+
+_delegate_
+&nbsp;&nbsp;&nbsp;&nbsp;Delegate of type OLGhostAlertViewDelegate. Handles dismissed event. 
 
 
 #### initWithTitle:message:
@@ -109,6 +112,11 @@ Time interval before the alert is automatically dismissed.
 Whether the alert can be dismissed with a tap or not.
 
 	@property (nonatomic) BOOL dismissible;
+
+#### delegate
+Delegate for dismissed event.
+
+        @property (nonatomic) id<OLGhostAlertViewDelegate> delegate;
 
 #### visible
 A Boolean value that indicates whether the view is currently visible on the screen.
